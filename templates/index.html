@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css')}}">
+{% endblock %}
+
+{% block title %}
+	首页
+{% endblock %}
+
+{% block body %}
+	<div class="row" style="margin-top: 20px;">
+            <div class="col"></div>
+            <div class="col-10">
+                <ul class="question-ul">
+                    {% for question in questions.items %}
+                    	<li>
+                            <div class="side-question">
+                                <img class="side-question-avatar" src="{{ url_for('static', filename= question.author.avatar) }}" alt="">
+                            </div>
+                            <div class="question-main">
+                                <div class="question-title"><a href="{{ url_for('qa.detail_question', qa_id=question.id) }}">{{ question.title }}</a></div>
+                                <div class="question-content">{{ question.content }}</div>
+                                <div class="question-detail">
+                                    <a class="mr-2" href="{{ url_for('qa.user_questions', username=question.author.username) }}">{{ question.author.username }}</a>
+{#                                    <span class="question-author">{{ question.author.username }}</span>#}
+                                    <span class="question-time">{{ question.create_time }}</span>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                    {% for page_num in questions.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=1) %}
+                        {% if page_num %}
+                            {% if page_num == questions.page %}
+                                <a class="btn btn-info mb-4" href="{{ url_for('qa.index', page=page_num) }}">{{ page_num }}</a>
+                            {% else %}
+                                <a class="btn btn-outline-info mb-4" href="{{ url_for('qa.index', page=page_num) }}">{{ page_num }}</a>
+                            {% endif %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col"></div>
+        </div>
+{% endblock %}
